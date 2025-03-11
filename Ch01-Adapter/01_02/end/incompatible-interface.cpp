@@ -38,14 +38,25 @@ public:
     }    
 };
 
+// Adapter class
+class LegacyComponentAdapter : public Component
+{
+private:
+    LegacyComponent legacyComponent;
+public:
+    virtual void run() override
+    {
+        legacyComponent.go();
+    }
+};
+
 int main()
 {    
     const unique_ptr<Component> components[]
     {
         make_unique<ConcreteComponentA>(),
         make_unique<ConcreteComponentB>(),
-        // The next line will trigger a compiler error (no viable conversion from 'unique_ptr<LegacyComponent>' to 'const unique_ptr<Component>')
-        make_unique<LegacyComponent>() 
+        make_unique<LegacyComponentAdapter>() // Use the adapter here
     };
     
     for (const auto& component : components)
